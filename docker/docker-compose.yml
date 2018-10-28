@@ -1,0 +1,109 @@
+version: '2.1'
+
+services:
+  rocketchat:
+    image: rocketchat/rocket.chat:0.70.4
+    restart: unless-stopped
+    volumes:
+      - ./uploads:/app/uploads
+    environment:
+      - PORT=3000
+      - ROOT_URL=http://localhost:3000
+      - MONGO_URL=mongodb://mongo:27017/rocketchat
+      - MONGO_OPLOG_URL=mongodb://mongo:27017/local
+      - MAIL_URL=smtp://smtp.email
+      - ADMIN_USERNAME=admin
+      - ADMIN_PASS=supersecret
+      - ADMIN_EMAIL=admin@example.com
+      - OVERWRITE_SETTING_Accounts_iframe_enabled=True
+      - OVERWRITE_SETTING_Accounts_iframe_url=http://localhost:8000/login/
+      - OVERWRITE_SETTING_Accounts_Iframe_api_url=http://localhost:8000/isLogined/
+    depends_on:
+      mongo-init-replica:
+        condition: service_started
+      mongo:
+        condition: service_healthy
+    ports:
+      - 3000:3000
+    labels:
+      - "traefik.backend=rocketchat"
+      - "traefik.frontend.rule=Host: your.domain.tld"
+
+  mongo:
+    image: mongo:3.2
+    restart: unless-stopped
+    volumes:
+     - ./data/db:/data/db
+     #- ./data/dump:/dump
+    healthcheck:
+      test: echo 'db.stats().ok' | mongo localhost:27017 --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
+    labels:
+      - "traefik.enable=false"
+
+  # this container's job is just run the command to initialize the replica set.
+  # it will run the command and remove himself (it will not stay running)
+  mongo-init-replica:
+    image: mongo:3.2
+    command: 'mongo mongo/rocketchat --eval "rs.initiate({ _id: ''rs0'', members: [ { _id: 0, host: ''localhost:27017'' } ]})"'
+    depends_on:
+      mongo:
+        condition: service_healthy
+
+  api:
+    image: judge0/api
+    env_file: judge0-api.conf
+    ports:
+      - "3001:3000"
+    privileged: true
+    restart: always
+    depends_on:
+      - db
+      - redis
+
+  worker:
+    image: judge0/api
+    env_file: judge0-api.conf
+    command: rails resque:work
+    privileged: true
+    restart: always
+    depends_on:
+      - db
+      - redis
+
+  db:
+    image: postgres:9.6.5
+    env_file: judge0-api.conf
+    volumes:
+      - ./srv/postgres-data:/var/lib/postgresql/data/
+    restart: always
+
+  redis:
+    image: redis
+    command: redis-server --appendonly yes
+    volumes:
+      - ./srv/redis-data:/data
+    restart: always
+    depends_on:
+      - db
+
+  twk-ide:
+    build: ../twk_backend
+    command: /bin/bash /runner/start.sh
+    volumes:
+      - ./twk:/runner
+      - ./twk_backend_start.sh:/runner/start.sh
+    ports:
+      - "8000:8000"
+    environment:
+      - ROCKET_CHAT_PUBLIC_URL=http://localhost:3000
+      - ROCKET_CHAT_PRIVATE_URL=http://rocketchat:3000
+      - ROCKET_CHAT_ADMIN_ACCOUNT=admin
+      - ROCKET_CHAT_ADMIN_PASSWORD=supersecret
+      - TWK_URL=http://localhost:8000
+      - JUDGE0_API_PUBLIC_URL=http://localhost:3001
+      - JUDGE0_API_PRIVATE_URL=http://api:3000
+

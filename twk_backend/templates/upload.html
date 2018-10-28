@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Upload</title>
+    <link rel="stylesheet" href="../static/css/upload.css">
+</head>
+
+<body>
+    <div id="content" class="colM">
+
+        <h1>Upload hw</h1>
+        <div id="content-main">
+
+            <div>
+                <fieldset class="module aligned ">
+                    <!-- <div class="form-row field-source_code">
+                            <div>
+                                <label class="required" for="id_source_code">Source code:</label>
+
+                                <textarea name="source_code" cols="40" rows="10" class="vLargeTextField" required="" id="id_source_code"></textarea>
+                            </div>
+
+                        </div> -->
+
+                    <div class="form-row field-question">
+
+
+                        <div>
+
+
+                            <label class="required" for="id_stdin">Question:</label>
+
+                            <textarea name="stdin" cols="40" rows="10" class="vLargeTextField" required="" id="id_question"></textarea>
+
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row field-stdin">
+
+
+                        <div>
+
+
+                            <label class="required" for="id_stdin">Stdin:</label>
+
+                            <textarea name="stdin" cols="40" rows="10" class="vLargeTextField" required="" id="id_stdin"></textarea>
+
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row field-stdout">
+
+
+                        <div>
+
+
+                            <label class="required" for="id_stdout">Stdout:</label>
+
+                            <textarea name="stdout" cols="40" rows="10" class="vLargeTextField" required="" id="id_stdout"></textarea>
+
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row field-language_id">
+
+
+                        <div>
+
+
+                            <label class="required" for="id_language_id">Language id:</label>
+
+                            <textarea name="language_id" cols="40" rows="10" class="vLargeTextField" required="" id="id_language_id">4</textarea>
+
+
+
+                        </div>
+
+                    </div>
+
+                    <!-- <div class="form-row field-hw_name">
+
+
+                            <div>
+
+
+                                <label class="required" for="id_file_name">hw name:</label>
+
+                                <textarea name="hw_name" cols="40" rows="10" class="vLargeTextField" required="" id="id_hw_name"></textarea>
+
+
+                            </div>
+
+                        </div> -->
+
+
+                </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="submit-row">
+                    <button id="save" type="submit" value="Save" class="default" name="_save" align="left">
+                        save</button>
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <br class="clear">
+    </div>
+    <script>
+        document.getElementById("save").addEventListener("click", save);
+
+        function save() {
+
+            var question = document.getElementById("id_question").value;
+            var language_id = document.getElementById("id_language_id").value;
+            var stdin = document.getElementById("id_stdin").value;
+            var stdout = document.getElementById("id_stdout").value;
+            var data = {
+                question: question,
+                language_id: language_id,
+                stdin: stdin,
+                stdout: stdout
+            };
+           
+
+
+              jQuery.ajax({
+                url:`{{twk_url}}/publish_hw/`,
+                type: "POST",
+                async: true,
+                headers: {
+                  "Accept":"application/json",
+                //  'X-CSRFToken': $('meta[name="token"]').attr('ontent')
+                },
+                data: JSON.stringify(data),
+                success: function(data, textStatus, jqXHR) {
+                  alert("upload successfully");
+                  window.location.replace("{{twk_url}}/templates/ide.html");
+
+                },
+                error:function() {
+                    console.log("fail")
+                }
+              });
+        }
+    </script>
+</body>
+
+</html>
