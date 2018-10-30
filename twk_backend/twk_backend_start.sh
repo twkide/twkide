@@ -1,5 +1,5 @@
 
-ls -A /runner
+mkdir /runner
 
 if [ ! -d /runner/code ]; then
     echo "/runner/code do not exist"
@@ -17,5 +17,10 @@ else
     cd /runner/code
 fi
 
-python3 ./manage.py runserver 0.0.0.0:8000
+if [ $1 = "test" ]; then
+    python3 ./manage.py test
+else
+    python3 ./manage.py runserver 0.0.0.0:8000
+fi
+
 

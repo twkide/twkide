@@ -1,5 +1,7 @@
 # twkide
 
+[![CircleCI](https://circleci.com/gh/twkide/twkide.svg?style=svg)](https://circleci.com/gh/twkide/twkide)
+
 An amazing online IDE inspired by Tung Wei Kuo
 
 https://sites.google.com/site/tungweikuo/

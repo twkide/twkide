@@ -92,10 +92,9 @@ services:
 
   twk-ide:
     build: ../twk_backend
-    command: /bin/bash /runner/start.sh
+    command: /bin/bash /code/twk_backend_start.sh
     volumes:
       - ./twk:/runner
-      - ./twk_backend_start.sh:/runner/start.sh
     ports:
       - "8000:8000"
     environment:
