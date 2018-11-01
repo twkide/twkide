@@ -13,9 +13,9 @@ from twk_load.views import load_hw
 
 from twk_save.views import save_publish_hw
 
-from .views import submit_hw
+from .views import submit_hw, get_code
 
-import json
+import json, base64
 
 """
 this test should open judge 0 server and set environment variable first, or it would be failed
@@ -25,18 +25,20 @@ class twk_submit_test(TestCase):
         self.client = Client()
         self.factory = RequestFactory()
         self.user = User.objects.create(
-            username='test', password='password')
+            username='test', password='password',email='james@yahoo.com.tw')
 
     def test_details(self):
         publish_data = { "question": "question1", "stdin": "1 1", "stdout":"2", "language_id":"4" }
         request = self.factory.post('/publish_hw/', json.dumps(publish_data), content_type='application/json')
 
         save_publish_hw(request)
-
-        submit_data = { 'source_code': "test", "language_id": "4", "assignment_id": "1"}
-        request = self.factory.post('/submit_hw/', json.dumps(submit_data), content_type='application/json')
+        s = base64.b64encode("2121313".encode())
+        print(s)
+        submit_data = { 'source_code':s , "language_id": "4", "assignment_id": "1"}
+        request = self.factory.post('/submit_hw/', submit_data, Accept='application/json')
         request.user = self.user
         response = submit_hw(request)
+        print(response.content)
 
         self.assertEqual(response.status_code, 200)
 
@@ -44,3 +46,12 @@ class twk_submit_test(TestCase):
         response = submit_hw(request)
 
         self.assertEqual(response.status_code, 302)
+
+        request = self.factory.get('/get_code/1/')
+        request.user = self.user
+        response = get_code(request, 1)
+
+        print(response)
+        self.assertEqual(response.status_code, 200)
+        
+
