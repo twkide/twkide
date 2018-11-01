@@ -32,13 +32,12 @@ class twk_submit_test(TestCase):
         request = self.factory.post('/publish_hw/', json.dumps(publish_data), content_type='application/json')
 
         save_publish_hw(request)
-        s = base64.b64encode("2121313".encode())
+        s = base64.b64encode(bytes('your string', 'utf-8'))
         print(s)
-        submit_data = { 'source_code':s , "language_id": "4", "assignment_id": "1"}
+        submit_data = { 'source_code': s , "language_id": "4", "assignment_id": "1"}
         request = self.factory.post('/submit_hw/', submit_data, Accept='application/json')
         request.user = self.user
         response = submit_hw(request)
-        print(response.content)
 
         self.assertEqual(response.status_code, 200)
 
