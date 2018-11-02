@@ -90,6 +90,14 @@ services:
     depends_on:
       - db
 
+  judge0_dep_proxy:
+    image: busybox
+    depends_on:
+      - api
+      - worker
+      - db
+      - redis
+
   twk-ide:
     build: ../twk_backend
     command: /bin/bash /code/twk_backend_start.sh
@@ -105,4 +113,6 @@ services:
       - TWK_URL=http://localhost:8000
       - JUDGE0_API_PUBLIC_URL=http://localhost:3001
       - JUDGE0_API_PRIVATE_URL=http://api:3000
+    depends_on:
+      - judge0_dep_proxy
 
