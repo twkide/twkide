@@ -217,7 +217,7 @@ function submit() {
       "Accept":"application/json",
     //  'X-CSRFToken': $('meta[name="token"]').attr('ontent')
     },
-    data: data,
+    data: Json.stringify(data),
     success: function(data, textStatus, jqXHR) {
       send_message('hsunyuan', data.homework_id);
       console.log(`Your submission token is: ${data.description}`);
