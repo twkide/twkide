@@ -28,14 +28,13 @@ def save_hw(request):
     print("unauthorized user tries to save hw")
     return HttpResponse('Unauthorized', status=401)
 
-# @login_required(login_url='/login/')
+@login_required(login_url='/login/')
 def save_publish_hw(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         p = PublishHW.objects.create(question = data['question'], stdin = data['stdin'],
                                      stdout = data['stdout'], language_id = data['language_id'])
         p.save()
-        
         return HttpResponse('success', 200)
     elif request.method == 'GET':
         p = PublishHW.objects.all()
@@ -43,11 +42,10 @@ def save_publish_hw(request):
         struct = json.loads(data)
         return JsonResponse(struct, safe=False)
 
-# @login_required(login_url='/login/') # https://docs.djangoproject.com/en/2.0/topics/auth/default/#the-login-required-decorator
+@login_required(login_url='/login/')
 def load_publish_hw(request, id):
     if request.method == 'GET':
         p = PublishHW.objects.get(id = id)
-        
         res = {
             'id' : p.id,
             'question': p.question,
@@ -55,6 +53,6 @@ def load_publish_hw(request, id):
             'stdout': p.stdout,
             'language_id': p.language_id
         }
-        
         return JsonResponse(res)
     return HttpResponse('Unauthorized', 401)
+

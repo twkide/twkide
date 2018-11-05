@@ -6,11 +6,11 @@ from rest_framework.test import APITestCase
 
 
 # Create your tests here.
-# 
+#
 class PublishHWTestCase(APITestCase):
     def test_get_PublishHW(self):
         data = { 'question': 'question1', 'stdin': "1 1", 'stdout':'2', 'language_id':'4'}
-       
+
         response = self.client.post('/publish_hw/', data, format='json')
 
         response = self.client.get('/publish_hw/1/')
