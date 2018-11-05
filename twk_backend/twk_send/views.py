@@ -23,6 +23,9 @@ def send_message(request):
 
 def peer_review_task_dispatch(request):
     hws = SubmitHW.objects.all()
+    print("hwshwshwshwshws")
+    for i in hws:
+        print(i)
     user_ids = []
     hw_ids = []
     visited = {}
@@ -30,10 +33,10 @@ def peer_review_task_dispatch(request):
         hw_ids.append(hw.id)
         user_ids.append(hw.user_id)
         if hw.user_id in visited:
-            return HttpResponse('replicated submissions from same user', 409)
+            return HttpResponse('replicated submissions from same user', status = 409)
         visited[hw.user_id] = True
     if len(user_ids) <= 1:
-        return HttpResponse('no enough submissions to dispatch', 409)
+        return HttpResponse('no enough submissions to dispatch', status = 409)
     assigned_hw_id = {}
     print("hw_ids = ", hw_ids)
     print("user_ids = ", user_ids)
@@ -44,7 +47,7 @@ def peer_review_task_dispatch(request):
         assigned_hw_id[user_ids[uid_idx]] = hw_ids[i]
         msg = 'Your classmates have some homeworks waiting your review!\n' + os.environ["TWK_URL"] + "#" + str(hw_ids[i])
         rocket_chat_send_im(str(user_ids[uid_idx]), msg, get_headers())
-    return HttpResponse('success', 200)
+    return HttpResponse('success', status = 200)
 
 def rocket_chat_send_im(user, msg, headers):
     print("sending messge \"", msg, "\" to user ", user)
