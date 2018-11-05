@@ -1,6 +1,9 @@
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
 
 from .views import save_publish_hw, load_publish_hw
+from django.contrib.auth.models import User
+
+import json
 
 class twk_submit_test(TestCase):
     def setUp(self):
@@ -17,7 +20,7 @@ class twk_submit_test(TestCase):
 
         request = self.factory.get('/publish_hw/1/')
         request.user = self.user
-        response = load_publish_hw(request)
+        response = load_publish_hw(request, 1)
 
         self.assertEqual(response.status_code, 200)
 
