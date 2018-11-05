@@ -31,10 +31,11 @@ class twk_submit_test(TestCase):
         publish_data = { "question": "question1", "stdin": "1 1", "stdout":"2", "language_id":"4" }
         request = self.factory.post('/publish_hw/', json.dumps(publish_data), content_type='application/json')
 
+        request.user = self.user
         save_publish_hw(request)
         s = base64.b64encode(b'your string')
         s = s.decode("utf-8")
-        print(s)
+
         submit_data = { 'source_code': s , "language_id": "4", "assignment_id": "1"}
         request = self.factory.post('/submit_hw/', submit_data, Accept='application/json')
         request.user = self.user
