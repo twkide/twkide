@@ -28,19 +28,9 @@ class twk_submit_test(TestCase):
         )
 
     def test_details(self):
-        u = User.objects.create_superuser(os.environ['ROCKET_CHAT_ADMIN_ACCOUNT'], 'myemail@test.com', os.environ['ROCKET_CHAT_ADMIN_PASSWORD'])
-        u.save()
-
-        i = User.objects.get(username='aaav')
-        print(i)
-        print(i.username)
-        print(i.password)
-        print("laefhjnjuhfjndo")
         self.submit_hw(self.user) #submit a hw by user1
         self.get_code(self.user, 1) #load submit by id = 1 
 
-
-        print("123132131231")
         self.islogin(self.user)
         self.islogin(self.user2)
         
@@ -49,13 +39,7 @@ class twk_submit_test(TestCase):
 
         self.submit_hw(self.user2)
         response = self.send_peer_review(self.user)
-
-        
-
         self.assertEqual(response.status_code, 200)
-
-
-
 
     def submit_hw(self, username):
         publish_data = { "question": "question1", "stdin": "1 1", "stdout":"2", "language_id":"4" }
