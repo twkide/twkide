@@ -18,6 +18,7 @@ else
 fi
 
 if [ $1 = "test" ]; then
+    ./wait-for-it.sh --timeout=30 rocketchat:3000 --strict -- \
     ./wait-for-it.sh --timeout=20 api:3000 --strict -- python3 ./manage.py test
 else
     python3 ./manage.py runserver 0.0.0.0:8000
