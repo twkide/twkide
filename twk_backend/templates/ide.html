@@ -67,8 +67,8 @@
             <a href="#" class="closebtn"  align="left">{{User}}</a>
             <a href="#">Account</a>
             <a href="#">Assignments</a>
-            <a href="{{TWK_URL}}/templates/upload.html">Add New Assignment</a>
-            <a href="{{TWK_URL}}/peer_review_task_dispatch">Send peer review instructions to students</a>
+            {{add_new|safe|escape }}
+            {{peer_review|safe|escape }}
             <a href="{{TWK_URL}}/view_peer_review_results">View peer review results</a>
             <a href="{{TWK_URL}}/logout">Sign out</a>
           </div>

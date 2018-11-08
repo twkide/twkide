@@ -15,9 +15,16 @@ def js_ide_js(request):
 def ide_html(request):
     username = "User"
     publish_hws = PublishHW.objects.all()
+    add_new = ""
+    peer_review = ""
+    if request.user.is_staff:
+        add_new='<a href="{}/templates/upload.html">Add new Assignment</a>'.format(os.environ["TWK_URL"])
+        peer_review='<a href="{}/peer_review_task_dispatch">Send peer review instructions to students</a>'.format(os.environ["TWK_URL"])
     if request.user.is_authenticated:
         username = request.user.get_username()
     return render(request, 'ide.html', {
+       'add_new':add_new,
+       'peer_review':peer_review,
        'rocket_chat_url': os.environ["ROCKET_CHAT_PUBLIC_URL"],
        'User':username,
        'publish_hws':publish_hws
