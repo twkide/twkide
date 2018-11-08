@@ -15,3 +15,5 @@ class PublishHW(models.Model):
     stdin = models.TextField()
     stdout = models.TextField()
     language_id = models.TextField()
+    def __str__(self):
+        return str(self.question)
