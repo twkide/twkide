@@ -140,9 +140,12 @@ def view_peer_review_results(request):
             </div>
         """)
     vals = []
-    for rhw in ReviseHW.objects.all():
+    if request.user.is_superuser:
+        rhws = ReviseHW.objects.all()
+    else:
+        rhws = ReviseHW.objects.filter(reviewee = request.user)
+    for rhw in rhws:
         tmp = [str(rhw.hw_id.hw_id), str(rhw.reviewee), str(rhw.reviewer), str(rhw.error_text)]
         vals.append(tmp)
     c = Context({"reviews": vals})
     return HttpResponse(t.render(c))
-
