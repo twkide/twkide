@@ -10,6 +10,11 @@
     <title>Upload</title>
     <link rel="stylesheet" href="../static/css/upload.css">
 </head>
+{% if user.is_authenticated %}
+{% if not user.is_staff %}
+<h3>Not allowed to access this page</h3>
+{% else %}
+{% block content %}
 
 <body>
     <div id="content" class="colM">
@@ -20,13 +25,13 @@
             <div>
                 <fieldset class="module aligned ">
                     <!-- <div class="form-row field-source_code">
-                            <div>
-                                <label class="required" for="id_source_code">Source code:</label>
-
-                                <textarea name="source_code" cols="40" rows="10" class="vLargeTextField" required="" id="id_source_code"></textarea>
-                            </div>
-
-                        </div> -->
+                                    <div>
+                                        <label class="required" for="id_source_code">Source code:</label>
+        
+                                        <textarea name="source_code" cols="40" rows="10" class="vLargeTextField" required="" id="id_source_code"></textarea>
+                                    </div>
+        
+                                </div> -->
 
                     <div class="form-row field-question">
 
@@ -93,19 +98,19 @@
                     </div>
 
                     <!-- <div class="form-row field-hw_name">
-
-
-                            <div>
-
-
-                                <label class="required" for="id_file_name">hw name:</label>
-
-                                <textarea name="hw_name" cols="40" rows="10" class="vLargeTextField" required="" id="id_hw_name"></textarea>
-
-
-                            </div>
-
-                        </div> -->
+        
+        
+                                    <div>
+        
+        
+                                        <label class="required" for="id_file_name">hw name:</label>
+        
+                                        <textarea name="hw_name" cols="40" rows="10" class="vLargeTextField" required="" id="id_hw_name"></textarea>
+        
+        
+                                    </div>
+        
+                                </div> -->
 
 
                 </fieldset>
@@ -150,29 +155,32 @@
                 stdin: stdin,
                 stdout: stdout
             };
-           
 
 
-              jQuery.ajax({
-                url:`{{twk_url}}/publish_hw/`,
+
+            jQuery.ajax({
+                url: `{{twk_url}}/publish_hw/`,
                 type: "POST",
                 async: true,
                 headers: {
-                  "Accept":"application/json",
-                //  'X-CSRFToken': $('meta[name="token"]').attr('ontent')
+                    "Accept": "application/json",
+                    //  'X-CSRFToken': $('meta[name="token"]').attr('ontent')
                 },
                 data: JSON.stringify(data),
-                success: function(data, textStatus, jqXHR) {
-                  alert("upload successfully");
-                  window.location.replace("{{twk_url}}/templates/ide.html");
+                success: function (data, textStatus, jqXHR) {
+                    alert("upload successfully");
+                    window.location.replace("{{twk_url}}/templates/ide.html");
 
                 },
-                error:function() {
+                error: function () {
                     console.log("fail")
                 }
-              });
+            });
         }
     </script>
-</body>
+</body> {% endblock %}
+{% endif %}
+{% endif %}
+
 
 </html>

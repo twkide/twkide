@@ -22,6 +22,8 @@ def send_message(request):
     return HttpResponse('You should use POST', status=401)
 
 def peer_review_task_dispatch(request):
+    if not request.user.is_staff:
+        return HttpResponse('permission denied', status = 409)
     hws = SubmitHW.objects.all()
     print("hwshwshwshwshws")
     for i in hws:
