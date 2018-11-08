@@ -115,4 +115,5 @@ services:
       - JUDGE0_API_PRIVATE_URL=http://api:3000
     depends_on:
       - judge0_dep_proxy
+      - rocketchat
 
