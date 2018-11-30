@@ -77,9 +77,11 @@ div {
             }
             </script>
         """)
+    """
     if request.user.is_staff == False:
         c = Context({"text": "Permission denied","twk_url":os.environ["TWK_URL"]})
         return HttpResponse(t.render(c), status = 409)
+    """
     hws = SubmitHW.objects.all()
     print("hwshwshwshwshws")
     for i in hws:
