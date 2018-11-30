@@ -107,16 +107,63 @@ def view_peer_review_results(request):
     t = Template("""
             <style>
                 table {
-                    border-collapse: collapse;
-                    width: 100%;
-                }
+    border-collapse: collapse;
+    width: 100%;
+}
 
-                th, td {
-                    padding: 8px;
-                    text-align: left;
-                    border-bottom: 1px solid #ddd;
-                }
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even){background-color: #f2f2f2}
+
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.button {
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 20px;
+  padding: 20px;
+  width: 150px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '<';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-left: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  left: 0;
+}
             </style>
+            <button class="button" onclick=func()><span>Back</span></button>
+            
             <div id="table">
             <table border=1>
             <thead>
@@ -138,6 +185,11 @@ def view_peer_review_results(request):
             </tbody>
             </table>
             </div>
+            <script>
+            function func() {
+                window.location.replace("{{twk_url}}/templates/ide.html");
+            }
+            </script>
         """)
     vals = []
     if request.user.is_superuser:
@@ -147,5 +199,5 @@ def view_peer_review_results(request):
     for rhw in rhws:
         tmp = [str(rhw.hw_id.hw_id), str(rhw.reviewee), str(rhw.reviewer), str(rhw.error_text)]
         vals.append(tmp)
-    c = Context({"reviews": vals})
+    c = Context({"reviews": vals,"twk_url":os.environ["TWK_URL"]})
     return HttpResponse(t.render(c))
