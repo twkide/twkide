@@ -521,7 +521,7 @@ window.addEventListener("hashchange", HashHandler, false);
 
   
 $("#true").click(function (e) {
-  revise(id = location.hash.slice(1), console="True",error_text="");
+  revise(id = location.hash.slice(1), console="True",error_text=inputEditor.getValue());
   window.location = "{{ twk_url }}";
   window.alert("submit success");
 });
