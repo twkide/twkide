@@ -340,7 +340,7 @@ function loadSavedSource() {
       // alert("Code not found!");
       window.history.replaceState(null, null, location.origin + location.pathname);
       //loadRandomLanguage();
-      loadCLanguage();
+      insertTemplate();
     }
   });
 }
