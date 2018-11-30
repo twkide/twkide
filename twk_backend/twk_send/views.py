@@ -9,6 +9,7 @@ import os
 import json
 from django.contrib.auth.models import User
 import random
+from django.template import Template, Context
 
 def get_headers():
     userId, token = auth.getAdminAuthToken();
@@ -22,6 +23,65 @@ def send_message(request):
     return HttpResponse('You should use POST', status=401)
 
 def peer_review_task_dispatch(request):
+    t =Template("""
+            <style>
+                
+.button {
+  border-radius: 4px;
+  background-color: #f4511e;
+  border: none;
+  color: #FFFFFF;
+  text-align: center;
+  font-size: 20px;
+  padding: 20px;
+  width: 150px;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.button span {
+  cursor: pointer;
+  display: inline-block;
+  position: relative;
+  transition: 0.5s;
+}
+
+.button span:after {
+  content: '<';
+  position: absolute;
+  opacity: 0;
+  top: 0;
+  left: -20px;
+  transition: 0.5s;
+}
+
+.button:hover span {
+  padding-left: 25px;
+}
+
+.button:hover span:after {
+  opacity: 1;
+  left: 0;
+}
+div {
+    font-family:"Arial Black";
+    font-size:20px;
+}
+            </style>
+            <button class="button" onclick=func()><span>Back</span></button>
+            <div>{{text}}</div>
+            <script>
+            function func() {
+                window.location.replace("{{twk_url}}/templates/ide.html");
+            }
+            </script>
+        """)
+    """
+    if request.user.is_staff == False:
+        c = Context({"text": "Permission denied","twk_url":os.environ["TWK_URL"]})
+        return HttpResponse(t.render(c), status = 409)
+    """
     hws = SubmitHW.objects.all()
     print("hwshwshwshwshws")
     for i in hws:
@@ -33,10 +93,12 @@ def peer_review_task_dispatch(request):
         hw_ids.append(hw.id)
         user_ids.append(hw.user_id)
         if hw.user_id in visited:
-            return HttpResponse('replicated submissions from same user', status = 409)
+            c = Context({"text": "Replicated submissions from same user","twk_url":os.environ["TWK_URL"]})
+            return HttpResponse(t.render(c), status = 409)
         visited[hw.user_id] = True
     if len(user_ids) <= 1:
-        return HttpResponse('no enough submissions to dispatch', status = 409)
+        c = Context({"text": 'No enough submissions to dispatch',"twk_url":os.environ["TWK_URL"]})
+        return HttpResponse(t.render(c), status = 409)
     assigned_hw_id = {}
     print("hw_ids = ", hw_ids)
     print("user_ids = ", user_ids)
@@ -47,7 +109,8 @@ def peer_review_task_dispatch(request):
         assigned_hw_id[user_ids[uid_idx]] = hw_ids[i]
         msg = 'Your classmates have some homeworks waiting your review!\n' + os.environ["TWK_URL"] + "#" + str(hw_ids[i])
         rocket_chat_send_im(str(user_ids[uid_idx]), msg, get_headers())
-    return HttpResponse('success', status = 200)
+    c = Context({"text": 'Success',"twk_url":os.environ["TWK_URL"]})
+    return HttpResponse(t.render(c), status = 200)
 
 def rocket_chat_send_im(user, msg, headers):
     print("sending messge \"", msg, "\" to user ", user)
