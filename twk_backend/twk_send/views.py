@@ -3,24 +3,48 @@ import twk_auth.views as auth
 
 from twk_submit.models import SubmitHW
 
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import requests
 import os
 import json
 from django.contrib.auth.models import User
 import random
 from django.template import Template, Context
+from twk_auth.models import RocketChatPass
 
 def get_headers():
-    userId, token = auth.getAdminAuthToken();
+    userId, token = auth.getAdminAuthToken()
     return {'X-Auth-Token': token, 'X-User-Id': userId, 'content-type': 'application/json' }
 
-def send_message(request):
-    if request.method == 'POST':
-        j = json.loads(request.body)
-        rocket_chat_send_im(j['user'], j['msg'], get_headers())
-        return HttpResponse('success', 200)
-    return HttpResponse('You should use POST', status=401)
+def get_User_headers(username, pw):
+    userId, token = auth.getAuthToken(username, pw)
+    return {'X-Auth-Token': token, 'X-User-Id': userId, 'content-type': 'application/json' }
+
+def get_unread_message(user):
+    try:
+        currentUser = RocketChatPass.objects.get(user = user)
+        headers = get_User_headers(currentUser.user.username, currentUser.pw)
+        return rocket_chat_im_history(headers, currentUser.user.username)  
+    except:
+        return 0
+
+def rocket_chat_im_history(headers, user):
+    r = requests.post(os.environ["ROCKET_CHAT_PRIVATE_URL"] +
+                      "/api/v1/im.create", headers = headers, json = {'username': 'admin'} )
+    print('test1')
+    print(r)
+    assert r.status_code == 200
+
+    print(r.json()['room']['_id'])
+
+    r = requests.get(os.environ["ROCKET_CHAT_PRIVATE_URL"] + "/api/v1/im.history?roomId=" + r.json()['room']['_id'] + "&unreads=true", headers = headers)
+    print('test2')
+    print(r)
+    assert r.status_code == 200
+
+    print('test3')
+    return len(r.json()['messages'])
+    
 
 def peer_review_task_dispatch(request):
     t =Template("""
@@ -118,6 +142,5 @@ def rocket_chat_send_im(user, msg, headers):
                       "/api/v1/im.create", headers = headers, json = {'username': user} )
     assert r.status_code == 200
     r = requests.post(os.environ["ROCKET_CHAT_PRIVATE_URL"] +
-                      "/api/v1/chat.postMessage", headers = headers, json = {'roomId': r.json()['room']['_id'], 'text': msg})
+                    "/api/v1/chat.postMessage", headers = headers, json = {'roomId': r.json()['room']['_id'], 'text': msg})
     assert r.status_code == 200
-

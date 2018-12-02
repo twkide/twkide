@@ -110,27 +110,6 @@ function closeNav() {
 
 }
 
-function send_message(user, id) {
-  console.log("1231312312312421412421");
-  var data = {
-    user: user,
-    msg: `The home work is in {{twk_url}}/templates/ide.html#${id}` 
-  }
-  
-  $.ajax({
-    url: `{{twk_url}}/send_msg/`,
-    type: "POST",
-    async: true,
-    headers: {
-      "Accept": "application/json"
-    },
-    data: JSON.stringify(data),
-    success: function(data, textStatus, jqXHR) {
-      console.log(data);
-    }
-  });
-}
-
 function run() {
   if (sourceEditor.getValue().trim() == "") {
     alert("Source code can't be empty.");
@@ -219,7 +198,6 @@ function submit() {
     },
     data: data,
     success: function(data, textStatus, jqXHR) {
-      send_message('hsunyuan', data.homework_id);
       console.log(`Your submission token is: ${data.description}`);
       alert(`${data.description}`); 
       //outputEditor.setValue(`id : ${data.id} \ndescription : ${data.description}` );
@@ -413,7 +391,6 @@ $(document).ready(function () {
     $('[data-toggle="tooltip"]').tooltip()
   });
 
-
   if(location.hash.length > 1 && !isNaN(location.hash.slice(1))) {
     judge = 1;
     console.log("aaa");
@@ -474,22 +451,14 @@ $(document).ready(function () {
 
   $vimCheckBox.prop("checked", localStorageGetItem("keyMap") == "vim").change();
 
-//  if (getIdFromURI()) {
-//    loadSavedSource();
-//  } else {
-    //loadRandomLanguage();
-    loadCLanguage();
+  loadCLanguage();
 
     
-//  }
-  // send_message();
   
   $(".trigger_popup_fricc").click(function(){
     $('.hover_bkgr_fricc').show();
  });
-//  $('.hover_bkgr_fricc').click(function(){
-//      $('.hover_bkgr_fricc').hide();
-//  });
+
  $('.popupCloseButton').click(function(){
      $('.hover_bkgr_fricc').hide();
  });
