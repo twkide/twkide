@@ -5,7 +5,7 @@ for user in User.objects.all():
     user.set_password(user.password)
     user.save()
 
-user = User.objects.create(username='admin', password='password')
+user = User.objects.create(username='superUser', password='password')
 user.set_password(user.password)
 user.is_superuser=True
 user.is_staff=True

@@ -46,8 +46,6 @@ urlpatterns = [
     url(r'get_code/(?P<id>[-\w]+)/', twk_submit.views.get_code),
     url(r'^publish_hw/(?P<id>[-\w]+)/', twk_save.views.load_publish_hw),
     url(r'^publish_hw/', twk_save.views.save_publish_hw),
-    url(r'^send_msg$', RedirectView.as_view(url='/send_msg/')),
-    url(r'^send_msg/?$', twk_send.views.send_message),
     url(r'^peer_review_task_dispatch$', RedirectView.as_view(url='/peer_review_task_dispatch/')),
     url(r'^peer_review_task_dispatch/?$', twk_send.views.peer_review_task_dispatch),
     url(r'^isLogined$', RedirectView.as_view(url = '/isLogined/')),
