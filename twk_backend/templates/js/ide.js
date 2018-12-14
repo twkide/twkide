@@ -478,8 +478,7 @@ function HashHandler() {
     $("#submitBtn").css("display", "none");
     $("#downloadSourceBtn").css("display", "none");
     $(".toggle").css("display", "none");
-    $("#true").css("display", "inline-flex");
-    $("#false").css("display", "inline-flex");
+    $("#judgement").css("display", "inline-flex");
   }
   
 
@@ -490,13 +489,13 @@ window.addEventListener("hashchange", HashHandler, false);
 
   
 $("#true").click(function (e) {
-  revise(id = location.hash.slice(1), console="True",error_text=inputEditor.getValue());
+  revise(id = location.hash.slice(1), console="True", error_text=$("#feedback").val());
   window.location = "{{ twk_url }}";
   window.alert("submit success");
 });
 
 $("#false").click(function (e) {
-  revise(id = location.hash.slice(1), console="False",error_text=inputEditor.getValue());
+  revise(id = location.hash.slice(1), console="False", error_text=$("#feedback").val());
   window.location = "{{ twk_url }}";
   window.alert("submit success");
 });
