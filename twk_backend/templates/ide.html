@@ -80,18 +80,21 @@
             <a class="navbar-brand"><small>{{User}}</small></a>
       </div>
       <span id = "judging" disabled>judging</span>
-        <div id="true" style="width: 200px;display: none;justify-content: center;line-height: 50px;cursor: pointer;">
-          <span style="color:yellow">Yes</span>
+      <div id = "judgement" style="display: none;margin-left: 20px;">
+        <div id="true" style="width: 200px;justify-content: center;line-height: 50px;cursor: pointer;">
+          <span style="color:yellow">Good</span>
           <span class="glyphicon glyphicon-ok" id="true" style="font-size: 40px;color:red;justify-content: center"></span>
         </div>
-        <div id="false" style="width: 200px;display: none;justify-content: center;line-height: 50px;cursor: pointer;">
-          <span style="color:yellow">No</span>
+        <div id="false" style="width: 200px;justify-content: center;line-height: 50px;cursor: pointer;">
+          <span style="color:yellow">Bad</span>
           <span class="glyphicon glyphicon-remove" id="true" style="font-size: 40px;color:red;justify-content: center"></span>
         </div>
+        <textarea id="feedback" class="form-control" aria-label="With textarea" placeholder="input your feedback"></textarea>
+      </div>
       <div class="navbar-form navbar-right">
         <select class="form-control" id="selectTaskBtn">
             {% for publish_hw in publish_hws %}
-              <option value="{{publish_hw.id}}" mode="text/x-sh"">Assignment {{ publish_hw.id }}</option>
+              <option value="{{publish_hw.id}}" mode="text/x-sh">Assignment {{ publish_hw.id }}</option>
             {% endfor %}
            
         </select>
@@ -99,11 +102,6 @@
           <span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Submit (Ctrl+Enter)
         </button>
         <div class="input-group">
-          <!-- <div class="input-group-btn">
-            <button id="insertTemplateBtn" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="Insert template">
-              <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
-            </button>
-          </div> -->
 
           <select class="form-control" id="selectLanguageBtn">
             <option value="1" mode="text/x-sh">Bash (4.4)</option>
